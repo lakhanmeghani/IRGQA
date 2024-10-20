@@ -1,0 +1,15 @@
+<template>
+    <lightning-card title="History Records">
+        <lightning-datatable 
+            key-field="id"
+            data={historyData}
+            columns={columns}
+            hide-checkbox-column
+            onsort={handleSort}
+        >
+        </lightning-datatable>
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading..." size="small"></lightning-spinner>
+        </template>
+    </lightning-card>
+</template>

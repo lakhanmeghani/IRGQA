@@ -1,0 +1,162 @@
+<apex:page renderAs="pdf" standardController="sirenum__Invoice__c" extensions="InvoiceController" showHeader="false" sidebar="false">
+    <head>
+        <style type="text/css">
+            * {
+                 font-family: Arial Unicode MS;
+            }
+            
+            @page
+            {
+              /* Portrait orientation */
+              size: portrait;
+            
+              /* Put page numbers in the bottom right corner of each
+              page in the pdf document. */
+              @bottom-center {
+                content: "{!$Label.StandardPage} " counter(page);
+              }
+            }
+        </style>
+    </head>
+    
+    <body style="font-family: sans-serif;"> 
+        <apex:pageblock >
+            <h1 style="font-size: 18px; text-align: center;"><apex:outputtext styleClass="invoicetitle"  value="{!sirenum__Invoice__c.sirenum__Title__c}" /></h1>
+            <div style="width: 100%;">
+                <div class="companyDetails" style="float: left; width: 49%;">
+                    <img src="{!logoUrl}" style="display: block" />
+                    <div><apex:outputText value="{!$Label.InvoiceCompany}"/></div>
+                    <div><apex:outputText value="{!$Label.InvoiceStreetAddress}"/></div>
+                    <div><apex:outputText value="{!$Label.InvoiceStreetAddress2}"/></div>
+                    <div><apex:outputText value="{!$Label.InvoiceStreetAddress3}"/></div>
+                    <div><apex:outputText value="{!$Label.InvoiceStreetAddress4}"/></div>
+                    <div><apex:outputText value="{!$Label.InvoiceStreetAddress5}"/></div>
+                    <div><apex:outputText value="{!$Label.InvoiceCompanyRegNumber}"/></div>
+                    <div><apex:outputText value="{!$Setup.sirenum__TimesheetSettings__c.sirenum__Invoice_Text__c}"/></div>
+                </div>
+            
+                <div class="invoiceDetails" style="float: right; ">
+                    <apex:panelgrid columns="2" rules="all" >
+                        <apex:outputtext value="{!$Label.PayrollInvoiceNumber}" />
+                        <apex:outputtext value="{!sirenum__Invoice__c.Name}" styleclass="rightalignedcolumn"/>
+                        <apex:outputtext value="{!$Label.PayrollICreatedDate}" />
+                        <apex:outputField value="{!sirenum__Invoice__c.sirenum__Created_DateOnly__c}" />
+                        <apex:outputtext value="{!$Label.PayrollIDueDate}" />
+                        <apex:outputField value="{!sirenum__Invoice__c.sirenum__Due_Date__c}" />
+                    </apex:panelgrid>
+                </div>
+                
+                <div style="clear:both"></div>
+            </div>
+            <!-- Above this section: Logo, company name, invoice details -->
+            <!-- Below this section: Billing address and Client Account information-->
+            <hr style="margin: 10px 0px;" />
+            <div style="width: 100%">
+                <div style="width: 49%; float: left;">
+                    <div><apex:outputText value="{!$Label.PayrollAccountBillingAddress}"/></div>
+                    <div><apex:outputField value="{!sirenum__Invoice__c.sirenum__Contract__r.sirenum__Client__r.Name}" /></div>
+                    <div><apex:outputText value="{!$Label.PayrollAccountsPayable}"/></div>
+                    <div><apex:outputField value="{!sirenum__Invoice__c.sirenum__Contract__r.Site__r.sirenum__Street_Address__c}" /></div>
+                    <div><apex:outputField value="{!sirenum__Invoice__c.sirenum__Contract__r.Site__r.sirenum__City__c}" /></div>
+                    <div><apex:outputField value="{!sirenum__Invoice__c.sirenum__Contract__r.Site__r.sirenum__Postal_Code__c}" /></div>
+                </div>
+                <div style="float: right">
+                    <table>
+                        <tr><td><apex:outputText value="{!$Label.PayrollCompanyName}"/></td><td><apex:outputField value="{!sirenum__Invoice__c.sirenum__Contract__r.sirenum__Client__r.Name}" /></td></tr>
+                        <tr><td><apex:outputText value="{!$Label.PayrollAccountName}"/></td><td><apex:outputField value="{!sirenum__Invoice__c.sirenum__Contract__r.Name}" /></td></tr>
+                        <tr><td><apex:outputText value="{!$Label.PayrollAccountNumber}"/></td><td><apex:outputtext value="{!sirenum__Invoice__c.sirenum__Contract__r.Site__r.Account_Reference_Number__c}" /></td></tr>
+                        <tr><td><apex:outputText value="{!$Label.PayrollAccountDetails}"/></td><td><apex:outputtext value="{!sirenum__Invoice__c.sirenum__Invoice_Comment__c}" /></td></tr>
+                    </table>
+                </div>
+                <div style="clear: both;"></div>
+            </div>
+            <hr style="margin: 10px 0px;" />
+            <apex:panelgrid columns="1" width="100%">
+                <apex:datatable headerClass="tablehead" rowClasses="odd,even"  value="{!sirenum__Invoice__c.sirenum__Invoice_Items__r}" var="i" id="theList" width="100%">
+                    <apex:column styleclass="leftalignedcolumn"
+                        headerValue="Description" value="{!i.sirenum__Description__c}" />
+                    <apex:column styleclass="rightalignedcolumn"
+                        headerValue="Units" value="{!i.sirenum__Units__c}" width="60px" />
+                    <apex:column styleclass="rightalignedcolumn" headerValue="{!$Label.StandardRate}"
+                        value="{!i.sirenum__Unit_Cost__c}" width="60px"/>
+                    <apex:column styleclass="centeralignedcolumn" headerValue="{!$Label.StandardPurchaseOrder}" value="{!i.sirenum__Purchase_Order__c}"/>
+                    <apex:column styleclass="rightalignedcolumn" headerValue="{!$Label.StandardCost}" value="{!i.sirenum__Cost__c}" />
+                </apex:datatable>
+            </apex:panelgrid>
+            
+            <hr style="margin: 10px 0px;" />
+            <apex:outputfield value="{!sirenum__Invoice__c.sirenum__Invoice_Comment__c}" />
+                <apex:panelgrid columns="2" width="100%" rules="all">
+                    <apex:panelgrid columns="2" rules="all" >
+                    <apex:outputtext value="{!$Label.PayrollInvoiceTotal}" styleclass="totals" />
+                    <apex:outputfield value="{!sirenum__Invoice__c.sirenum__Invoice_Total__c}" styleclass="totals" />
+                </apex:panelgrid>
+                    
+            </apex:panelgrid>
+            <hr style="margin: 10px 0px;" />
+            <apex:outputfield value="{!sirenum__Invoice__c.sirenum__Invoice_Comment__c}" />
+                <apex:panelgrid columns="1" width="100%" rules="all" styleclass="pagefooter" >
+                    <apex:panelgrid columns="1" rules="all" >
+                    <apex:outputtext value="{!$Label.RemittanceAdviseSettlement}" />    
+                    <apex:outputtext value="{!$Label.RemittanceAdvise}" />
+                    <apex:outputtext value="{!$Label.RemittanceCompany}" />
+                    <apex:outputtext value="{!$Label.RemittanceAccount}" />
+                    <apex:outputtext value="{!$Label.RemittanceSortCode}" />
+                    <apex:outputtext value="{!$Label.RemittanceIBAN}" />
+                    <apex:outputtext value="{!$Label.RemittanceAdviseQueries}" />
+                    <apex:outputtext value="{!$Label.RemittanceContact}" />
+                </apex:panelgrid>
+            </apex:panelgrid>
+        </apex:pageblock>
+        <apex:pageBlock rendered="{!showTimesheetReport}">
+            <div style="page-break-before:always;"/>
+            <h1 style="font-size: 18px; text-align: center;"><apex:outputtext styleClass="invoicetitle"  value="{!$Label.PayrollInvoiceTimeSheet}" /></h1>
+            <apex:repeat value="{!sheets}" var="w">
+                <apex:outputText value="{!w.name}" />
+                <table cellspacing="1" cellpadding="1" border="1" style="margin-top:10px;border-collapse:collapse;border:1px solid #b2b2b2;font-size:9px">
+                    <tr style="background-color:#757171">
+                        <th style ="width:200px"><apex:outputText value="{!$Label.StandardPersonName}"/></th>
+                        <th style ="width:135px"><apex:outputText value="{!$Label.StandardDate}"/></th>
+                        <th style ="width:135px"><apex:outputText value="{!$Label.ShiftPONumber}"/></th>
+                        <th style ="width:175px"><apex:outputText value="{!$ObjectType.sirenum__Site__c.label}"/></th>
+                        <th style ="width:60px"><apex:outputText value="{!$Label.StandardStart}"/></th>
+                        <th style ="width:60px"><apex:outputText value="{!$Label.StandardFinish}"/></th>
+                        <th style ="width:50px;border-right:1px solid #b2b2b2"><apex:outputText value="{!$Label.StandardHours}"/></th>
+                        <!-- ********** ADD LABEL FOR ADDITIONAL FIELDS HERE ********** -->
+                    </tr>
+                    <apex:repeat value="{!w.employees}" var="e">
+                        <tr>
+                            <td style="font-weight:bold"><apex:outputText value="{!e.Name}"/></td>
+                            <td colspan="3"></td>
+                            <td style="background-color:#d3d3d3" colspan="2"><apex:outputText value="{!$Label.StandardTotal}"/></td>
+                            <td style="font-weight:bold;border-right:1px solid #b2b2b2"><apex:outputText value="{!e.total}"/></td>
+                        </tr>
+                        <apex:repeat value="{!e.shifts}" var="s">
+                            <tr>
+                                <td style="border:0"/>
+                                <td style="border-bottom:1px solid #b2b2b2"><apex:outputText value="{!s.Day} {!s.Dt}"/></td>
+                                <td style="border-bottom:1px solid #b2b2b2"><apex:outputText value="{!s.poNumber}"/></td>
+                                <td style="border-bottom:1px solid #b2b2b2"><apex:outputText value="{!s.Station}"/></td>
+                                <td style="border-bottom:1px solid #b2b2b2"><apex:outputText value="{!s.Start}"/></td>
+                                <td style="border-bottom:1px solid #b2b2b2"><apex:outputText value="{!s.Finish}"/></td>
+                                <td style="border-bottom:1px solid #b2b2b2;border-right:1px solid #b2b2b2"><apex:outputText value="{!s.Hours}"/></td>
+                                <!-- ********** ADD VALUES FOR ADDITIONAL FIELDS HERE ********** -->
+                            </tr>
+                        </apex:repeat>
+                    </apex:repeat>
+                    <tr style="border:1px solid white;height:20px;">
+                        <td style="border:0" colspan="6"></td>
+                    </tr>
+                    <tr>
+                        <td style="border:0" colspan="2"/>
+                        <td colspan="4" style="border-bottom:1px solid #b2b2b2"><apex:outputText value="{!$Label.PayrollTotalWorkedHours}"/></td>
+                        <td style="font-weight:bold;border-bottom:1px solid #b2b2b2;border-right:1px solid #b2b2b2" ><apex:outputText value="{!w.grandTotal}"/></td>
+                    </tr>
+                    <tr style="border:1px solid white;height:20px;">
+                        <td style="border:0" colspan="6"></td>
+                    </tr>
+                </table>
+            </apex:repeat>
+        </apex:pageBlock>
+    </body>
+</apex:page>

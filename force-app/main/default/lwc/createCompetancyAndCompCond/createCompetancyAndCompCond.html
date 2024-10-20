@@ -1,0 +1,82 @@
+<template>
+    <lightning-card title="Create Competency">
+        <template if:true={isProcessing}>
+            <lightning-spinner alternative-text="Processing"></lightning-spinner>
+        </template>
+        <div class="slds-p-around_medium">
+            <lightning-combobox
+                name="selectCategory"
+                label="Category"
+                value={selectedCategoryValue}
+                options={picklistOptions}
+                onchange={handlePicklistChange}
+            ></lightning-combobox>
+            
+        
+        <lightning-input type="Text" name="CompName"  label="Competency Name" value={inputName}  onchange={handleNameChange}   required></lightning-input>
+        <lightning-input type="Text" name="CourseTitle"  label="Course Title" value={courseTitle}  onchange={handleNameChange}   ></lightning-input>
+						<lightning-input type="Text" name="SearchableName"   label="Searchable Name" value={inputSearchableName}  onchange={handleNameChange}   required></lightning-input>
+						<c-project-lookup label="Project" selected-icon-name="standard:account" object-label="Project"
+        object-api-name="sirenum__ProActiveContract__c" field-api-name="Name" other-field-api-name="Oracle_Project_Code__c"
+        onvalueselected={handleValueSelectedOnAccount} >
+        </c-project-lookup>
+						<lightning-combobox
+          name="Severity"
+          label="Severity"
+          value={selectedSeverityValue}
+          options={picklistSeverityOptions}
+          onchange={handleSeverityPicklistChange}
+					required
+      ></lightning-combobox>
+        <template if:true={isProjectSelected}>
+        <lightning-dual-listbox name="country"
+                                    label="Select Country"
+                                    source-label="Available"
+                                    selected-label="Selected"
+                                    field-level-help="Select country"
+                                    options={picklistOptionsForCountry}
+                                    
+                                    onchange={handleCountryPicklistChange}></lightning-dual-listbox>
+                                    <br/>
+         
+        </template>
+        <template if:true={isCountrySelected}>
+            <lightning-dual-listbox name="site"
+                                        label="Select Site"
+                                        source-label="Available"
+                                        selected-label="Selected"
+                                        field-level-help="Select Site"
+                                        options={picklistOptionsForSite}
+                                        
+                                        onchange={handleSitePicklistChange}></lightning-dual-listbox>
+                                        <br/>
+ 
+        </template>
+        
+        </div>
+        <div class="slds-form-element">
+            <div class="slds-form-element__control">
+              <div class="slds-checkbox" style="left: 1rem;">
+                <input type="checkbox" name="options" id="checkbox-unique-id-81" value="checkbox-unique-id-81" onchange={handleCheckboxChange} checked={isChecked}/>
+                <label class="slds-checkbox__label" for="checkbox-unique-id-81">
+                  <span class="slds-checkbox_faux"></span>
+                  <span class="slds-form-element__label">Generate Competency Condition</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        
+            <button onclick={handleButtonClick} name="save" class="slds-button slds-button_brand" style="left: 16px; margin-top: 23px;">
+                Save
+            </button>
+            <button onclick={handleButtonClick} name="saveAndNew" class="slds-button slds-button_brand" style="left: 29px; margin-top: 23px;">
+                Save & New
+            </button>
+				 <button onclick={handleButtonClick} name="cancel" class="slds-button slds-button_brand" style="left: 44px; margin-top: 23px;">
+              Cancel
+          </button>
+				
+        
+
+    </lightning-card>
+</template>

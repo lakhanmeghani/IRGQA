@@ -1,0 +1,14 @@
+hiddenElement {
+    display: none; !important
+}
+
+.staffRequest[available="false"][approved='1'] {
+    background: darkgreen; !important;
+    color: white; !important;
+}
+
+/* SPS-983 elements of class "sirenumContextMenuItem" with custom attribute "data-customformat" set to "employeeRequestHidden"
+   should be hidden */
+.sirenumContextMenuItem[data-customformat="employeeRequestHidden"] {
+    display:none !important;
+}
